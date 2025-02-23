@@ -7,7 +7,7 @@ import axios from "axios";
 export const useAuthStore = create((set) => ({
     authUser: null,
     isSigningUp: false,
-    isLogginIn: false,
+    isLoggingIn: false,
     isUpdatingProfile: false,
     isCheckingAuth: true,
 
@@ -47,15 +47,29 @@ export const useAuthStore = create((set) => ({
     },
 
     login: async (data) => {
-        set({ isLogginIn: true })
-       try {
-            const response = await axios.post("/auth/login", data);
+        set({ isLoggingIn: true })
+        try {
+            const response = await axiosInstance.post("/auth/login", data);
             set({ authUser: response.data });
             toast.success("Logged in successfully.");
         } catch (error) {
             toast.error(error.response.data.message);
         } finally {
-            set({ isLogginIn: false });
+            set({ isLoggingIn: false });
         }
-    }
+    },
+
+    updateProfile: async (data) => {
+        set({ isUpdatingProfile: true })
+        try {
+            const response = await axiosInstance.put("/auth/update-profile", data);
+            set({ authUser: response.data });
+            toast.success("Profile picture uploaded");
+        } catch (error) {
+            console.log(error);
+            toast.error(error.response?.data?.message || "An error occured");
+        } finally { 
+            set({ isUpdatingProfile: false });
+        }
+    },
 }));

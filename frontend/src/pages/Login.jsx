@@ -1,6 +1,6 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useAuthStore } from '../store/useAuthStore.js';
-import { Eye, EyeOff, Loader2, Mail, MessageSquare } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Mail, MessageSquare, Lock } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import AuthImagePattern from '../components/AuthImagePattern.jsx';
 
@@ -15,7 +15,6 @@ const Login = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
     login(formData);
   }
 
