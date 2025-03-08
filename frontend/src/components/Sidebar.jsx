@@ -2,20 +2,25 @@ import React, { useEffect, useState } from 'react'
 import { useChatStore } from '../store/useChatStore.js'
 import { Users } from "lucide-react"
 import { useAuthStore } from '../store/useAuthStore.js';
+import { useFriendStore } from '../store/useFriendStore.js';
 
 const Sidebar = () => {
 
     const { getUsers, users, selectedUser, isUsersLoading, setSelectedUser } = useChatStore();
+    const { isFriendsLoading, friends, fetchFriends } = useFriendStore();
     const { onlineUsers } = useAuthStore();
     const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
     useEffect(() => {
         getUsers();
-    }, [getUsers]);
+        fetchFriends();
+    }, [getUsers, fetchFriends]);
 
-    const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+    // const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+    const filteredUsers = showOnlineOnly ? friends.filter(friend => onlineUsers.includes(friend._id)) : friends;
 
-    if (isUsersLoading) return <div>Loading...</div>
+    // if (isUsersLoading) return <div>Loading...</div>
+    if (isFriendsLoading) return <div>Loading...</div>
 
     return (
         <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>
