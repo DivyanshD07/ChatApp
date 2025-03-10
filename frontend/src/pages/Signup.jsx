@@ -7,6 +7,7 @@ import toast from 'react-hot-toast';
 
 const Signup = () => {
 
+  const [signupMessage, setSignupMessage] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
     userName: "",
@@ -18,28 +19,27 @@ const Signup = () => {
   const { signup, isSigningUp } = useAuthStore();
 
   const validateForm = () => {
-    if(!formData.fullName.trim()) return toast.error("Full name is required");
-    if(!formData.userName.trim()) return toast.error("Username is required");
-    if(!formData.email.trim()) return toast.error("Email is required");
-    if(!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) return toast.error("Invalid email format");
-    if(!formData.password.trim()) return toast.error("Password is required");
-    if(formData.password.length < 8) return toast.error("Password must be atleast 8 characters.");
+    if (!formData.fullName.trim()) return toast.error("Full name is required");
+    if (!formData.userName.trim()) return toast.error("Username is required");
+    if (!formData.email.trim()) return toast.error("Email is required");
+    if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(formData.email)) return toast.error("Invalid email format");
+    if (!formData.password.trim()) return toast.error("Password is required");
+    if (formData.password.length < 8) return toast.error("Password must be atleast 8 characters.");
 
     return true;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-
     const success = validateForm();
-
-    if(success === true) signup(formData);
+    if (success === true) await signup(formData);
+    setSignupMessage("Account created successfully. Please check your email for verification.")
   }
 
   return (
-    <div className='min-h-screen grid lg:grid-cols-2'>
+    <div className='min-h-screen grid lg:grid-cols-2 pt-16'>
       {/* left side */}
-      <div className='flex flex-col justify-center items-center p-6 sm:p-12'>
+      <div className='flex h-max flex-col justify-center items-center p-6 sm:p-12'>
 
         <div className='w-full max-w-md space-y-8'>
           <div className='text-center mb-8'>
@@ -148,6 +148,8 @@ const Signup = () => {
               )}
             </button>
           </form>
+
+          {signupMessage && <p style={{ color: "green" }}>{signupMessage}</p>}
           <div className='text-center'>
             <p className='text-base-content/60'>
               Already have an account?{" "}
@@ -160,8 +162,8 @@ const Signup = () => {
       {/* right side */}
 
       <AuthImagePattern
-       title="Join us"
-       subtitle="Connect with friends, share moments, and stay in touch."  
+        title="Join us"
+        subtitle="Connect with friends, share moments, and stay in touch."
       />
     </div>
   )

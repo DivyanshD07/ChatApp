@@ -6,16 +6,30 @@ import AuthImagePattern from '../components/AuthImagePattern.jsx';
 
 const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
+  const [showResend, setShowResend] = useState(false);
+  const [email, setEmail] = useState("");
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
 
-  const { login, isLoggingIn } = useAuthStore();
+  const { login, isLoggingIn, resendVerificationEmail } = useAuthStore();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    login(formData);
+    setShowResend(false);
+
+    // console.log("Submitting form:", formData);
+    try {
+      await login(formData);
+    } catch (error) {
+      console.log("Login Error:", error.message);
+      if (error.message === "Email not verified. Check your inbox.") {
+        setShowResend(true);
+        setEmail(formData.email);
+        console.log(email)
+      }
+    }
   }
 
   return (
@@ -96,6 +110,13 @@ const Login = () => {
               )}
             </button>
           </form>
+
+          {showResend && (
+            <div className='text-center z-40'>
+              <p className='text-red-500'>Your email is not verified. Please check you inbox.</p>
+              <button className='btn btn-outline mt-2' onClick={() => resendVerificationEmail(email)}>Resend Verification Email</button>
+            </div>
+          )}
           <div className='text-center'>
             <p className='text-base-content/60'>
               Not registered?{" "}
@@ -108,8 +129,8 @@ const Login = () => {
       {/* right side */}
 
       <AuthImagePattern
-       title="Chat"
-       subtitle="Connect with friends, share moments, and stay in touch."  
+        title="Chat"
+        subtitle="Connect with friends, share moments, and stay in touch."
       />
     </div>
   )

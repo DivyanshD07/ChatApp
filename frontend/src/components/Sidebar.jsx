@@ -16,11 +16,11 @@ const Sidebar = () => {
         fetchFriends();
     }, [getUsers, fetchFriends]);
 
-    // const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
-    const filteredUsers = showOnlineOnly ? friends.filter(friend => onlineUsers.includes(friend._id)) : friends;
+    const filteredUsers = showOnlineOnly ? users.filter(user => onlineUsers.includes(user._id)) : users;
+    const friendsUsers = showOnlineOnly ? friends.filter(friend => onlineUsers.includes(friend._id)) : friends;
 
-    // if (isUsersLoading) return <div>Loading...</div>
-    if (isFriendsLoading) return <div>Loading...</div>
+    if (isUsersLoading) return <div>Loading...</div>
+    // if (isFriendsLoading) return <div>Loading...</div>
 
     return (
         <aside className='h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200'>

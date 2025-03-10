@@ -1,5 +1,5 @@
 import User from "../models/user.model.js";
-
+ 
 // Send friend request
 export const sendFriendRequest = async (req, res) => {
     const senderId = req.user._id

@@ -6,6 +6,7 @@ export const useFriendStore = create((set) => ({
     friends: [],
     friendRequests: [],
     isFriendsLoading: false,
+    isFriendRequestLoading: false,
 
     // fetch friends list
     fetchFriends: async() => {
@@ -20,6 +21,18 @@ export const useFriendStore = create((set) => ({
         }
     },
 
+    // fetch friend request
+    fetchFriendRequest: async() => {
 
-    
+    },
+
+    // send friend request
+    friendRequestSend: async() => {
+
+    },
+
+    // respond to request
+    respondToRequest: async() => {
+
+    },
 }))

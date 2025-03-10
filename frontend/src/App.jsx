@@ -11,13 +11,14 @@ import { useAuthStore } from './store/useAuthStore.js'
 import { Loader } from "lucide-react"
 import { Toaster } from "react-hot-toast"
 import { useThemeStore } from './store/useThemeStore.js'
+import VerifyEmail from './pages/verifyEmail.jsx'
 
 const App = () => {
 
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
   const { theme } = useThemeStore();
 
-  console.log({onlineUsers});
+  console.log({ onlineUsers });
 
   useEffect(() => {
     checkAuth();
@@ -35,11 +36,12 @@ const App = () => {
     <div data-theme={theme}>
       <Navbar />
       <Routes>
-        <Route path='/' element={authUser ? <Home /> : <Navigate to="/login" />} />
+        <Route path='/' element={authUser ? (authUser.isVerified ? <Home /> : <Navigate to="/verify-email" />) : <Navigate to="/login" />} />
         <Route path='/signup' element={!authUser ? <Signup /> : <Navigate to="/" />} />
         <Route path='/login' element={!authUser ? <Login /> : <Navigate to="/" />} />
+        <Route path='/verify-email' element={<VerifyEmail />} />
         <Route path='/settings' element={<Settings />} />
-        <Route path='/profile' element={authUser ? <Profile /> : <Navigate to="/login" />} />
+        <Route path='/profile'  element={authUser ? (authUser.isVerified ? <Profile /> : <Navigate to="/verify-email" />) : <Navigate to="/login" />} />
       </Routes>
       {/* <Footer /> */}
       <Toaster />

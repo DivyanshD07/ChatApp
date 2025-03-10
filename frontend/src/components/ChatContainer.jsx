@@ -20,7 +20,7 @@ const ChatContainer = () => {
     }
 
   }, [selectedUser._id, getMessages, subscribeToMessages, unSubscribeToMessages]);
-
+ 
 
   useEffect(() => {
     if(messageRef.current && messages) messageRef.current.scrollIntoView({ behavior: "smooth" })

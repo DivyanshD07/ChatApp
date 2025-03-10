@@ -17,8 +17,17 @@ export const useAuthStore = create((set, get) => ({
     checkAuth: async () => {
         try {
             const response = await axiosInstance.get("/auth/check");
-            set({ authUser: response.data });
-            get().connectSocket();
+            if (response.data) {
+                set({ authUser: response.data });
+
+                if (response.data.isVerified) {
+                    get().connectSocket();
+                } else {
+                    toast.error("Please verify your email first.");
+                }
+            } else {
+                set({ authUser: null });
+            }
         } catch (error) {
             console.log("Error in checkAuth:", error);
             set({ authUser: null });
@@ -31,13 +40,22 @@ export const useAuthStore = create((set, get) => ({
         set({ isSigningUp: true });
         try {
             const response = await axiosInstance.post("/auth/signup", data);
-            set({ authUser: response.data });
-            toast.success("Account created successfully");
-            get().connectSocket();
+            // set({ authUser: response.data });
+            toast.success("Account created successfully. Please check your email for verification.");
+            // get().connectSocket();
         } catch (error) {
             toast.error(error.response.data.message);
         } finally {
             set({ isSigningUp: false });
+        }
+    },
+
+    resendVerificationEmail: async (email) => {
+        try {
+            await axiosInstance.post("/auth/resend-verification", { email });
+            toast.success("Verification email send!");
+        } catch (error) {
+            toast.error(error.response?.data?.message || "Failed to resent email.");
         }
     },
 
@@ -60,7 +78,12 @@ export const useAuthStore = create((set, get) => ({
             toast.success("Logged in successfully.");
             get().connectSocket();
         } catch (error) {
-            toast.error(error.response.data.message);
+            if (error.response?.data?.message === "Email not verified") {
+                toast.error("Email not verified. Please check your inbox.");
+            } else {
+                toast.error(error.response?.data?.message || "Login failed");
+            }
+            throw new Error(error.response?.data?.message);
         } finally {
             set({ isLoggingIn: false });
         }
@@ -82,7 +105,7 @@ export const useAuthStore = create((set, get) => ({
 
     connectSocket: () => {
         const { authUser } = get();
-        if (!authUser || get().socket?.connected) return;
+        if (!authUser || !authUser.isVerified || get().socket?.connected) return;
 
         const socket = io(BASE_URL, {
             query: {
