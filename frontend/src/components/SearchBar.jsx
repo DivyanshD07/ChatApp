@@ -1,24 +1,30 @@
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { Search, User } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useUserStore } from '../store/useUserStore';
+import { debounce } from 'lodash';
 
 const SearchBar = () => {
   const { searchUser, searchedUsers, clearUsers } = useUserStore();
   const [query, setQuery] = useState('');
   const navigate = useNavigate();
 
-  const handleSearch = async (e) => {
+  const debouncedSearch = useCallback(
+    debounce(async (value) => {
+      if (value.length === 0) {
+        clearUsers();
+        return;
+      }
+      await searchUser(value);
+    }, 500),
+    []
+  );
+
+  const handleSearch = (e) => {
     const value = e.target.value.trim();
     setQuery(value);
-
-    if (value.length === 0) {
-      clearUsers();
-      return;
-    }
-
-    await searchUser(value);
-  };
+    debouncedSearch(value);
+  }
 
   const handleUserClick = (userId) => {
     navigate(`/profile/${userId}`);

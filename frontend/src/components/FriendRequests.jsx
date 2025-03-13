@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { useFriendStore } from "../store/useFriendStore.js";
 import { FaUserFriends } from "react-icons/fa";
@@ -6,13 +6,26 @@ import { FaUserFriends } from "react-icons/fa";
 const FriendRequests = () => {
   const { friendRequests, fetchFriendRequests, respondToRequest } = useFriendStore();
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   useEffect(() => {
     fetchFriendRequests();
   }, [fetchFriendRequests]);
 
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       {/* Friend Requests Icon */}
       <button onClick={() => setDropdownOpen(!dropdownOpen)} className="relative">
         <FaUserFriends className="text-2xl text-gray-700 hover:text-blue-600 transition" />
@@ -23,16 +36,19 @@ const FriendRequests = () => {
 
       {/* Dropdown for Friend Requests */}
       {dropdownOpen && (
-        <div className="absolute right-0 mt-2 w-64 bg-white text-black shadow-lg rounded-lg border">
+        <div className="absolute left-0 mt-2 w-64 bg-white text-black shadow-lg rounded-lg border">
           <h3 className="text-lg font-bold p-2 border-b">Friend Requests</h3>
           {friendRequests.length === 0 ? (
             <p className="p-2 text-gray-600">No friend requests</p>
           ) : (
-            friendRequests.map((req) => (
-              <div key={req.from} className="p-2 flex items-center justify-between">
-                <Link to={`/profile/${req.from}`} className="flex items-center">
-                  <img src={req.profilePic} alt={req.userName} className="w-10 h-10 rounded-full mr-2" />
-                  <span className="font-medium">{req.userName}</span>
+            friendRequests.map((request) => (
+              <div key={request._id} className="p-2 flex items-center justify-between">
+                <Link to={`/profile/${request.from}`} className="flex items-center">
+                  <img src={request.from.profilePic} alt={request.from.userName} className="w-10 h-10 rounded-full mr-2" />
+                  <div className="flex flex-col">
+                    <span className="font-medium">{request.from.userName}</span>
+                    <span className="font-thin text-xs">{request.from.fullName}</span>
+                  </div>
                 </Link>
                 <div>
                   <button

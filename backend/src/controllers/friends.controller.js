@@ -100,9 +100,9 @@ export const getFriends = async (req, res) => {
 export const getFriendsRequests = async (req, res) => {
     try {
         const loggedInUserId = req.user._id;
-        const user = await User.findById(loggedInUserId).populate("friendRequests", "userName fullName email");
+        const user = await User.findById(loggedInUserId).populate("friendRequests.from", "userName profilePic fullName email");
         if (!user) return res.status(404).json({ message: "User not found" });
-        console.log("friend requests: ", user.friendRequests)
+        // console.log("friend requests: ", user.friendRequests)
         res.status(200).json(user.friendRequests);
     } catch (error) {
         console.log("Error in getFriends: ", error.message);

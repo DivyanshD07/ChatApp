@@ -45,6 +45,18 @@ export const useFriendStore = create((set) => ({
             toast.success("Friend request send");
         } catch (error) {
             console.error("Error sending friend request", error);
+            if(error.response && error.response.status === 400) {
+                const errorMessage = error.response.data.message;
+                if(errorMessage === "Friend request already sent") {
+                    toast.error("Friend request already sent");
+                } else if (errorMessage === "Already friends") {
+                    toast.error("You are already friends");
+                } else {
+                    toast.error(errorMessage);
+                }
+            } else {
+                toast.error("Something went wrong. Please try again.");
+            } 
         } finally {
             set({ isSendingFriendRequest: false });
         }

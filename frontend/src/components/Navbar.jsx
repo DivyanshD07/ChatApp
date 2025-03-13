@@ -20,10 +20,11 @@ const Navbar = () => {
             </Link>
           </div>
 
-          <SearchBar />
-          <FriendRequests />
+
 
           <div className='flex items-center gap-2'>
+            <FriendRequests />
+            <SearchBar />
             <Link
               to={"/settings"}
               className={`

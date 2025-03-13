@@ -130,7 +130,12 @@ export const resendVerificationEmail = async (req, res) => {
 
 export const logout = (req, res) => {
     try {
-        res.cookie("jwt", "", { maxAge: 0 });
+        res.clearCookie("jwt", {
+            httpOnly: true,
+            secure: true,
+            sameSite: "None",
+            path: "/"
+        });
         res.status(200).json({ message: "Logged out successfully" });
     } catch (error) {
         console.log("Error in logout container:", error.message);

@@ -6,4 +6,5 @@ export default defineConfig({
   css: {
     postcss: true, // Ensures Tailwind works properly
   },
+  base: "/",
 });
