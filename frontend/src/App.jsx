@@ -6,12 +6,12 @@ import Signup from './pages/Signup'
 import Login from './pages/Login'
 import Settings from './pages/Settings'
 import Profile from './pages/Profile'
-import Footer from './components/Footer'
 import { useAuthStore } from './store/useAuthStore.js'
 import { Loader } from "lucide-react"
 import { Toaster } from "react-hot-toast"
 import { useThemeStore } from './store/useThemeStore.js'
-import VerifyEmail from './pages/verifyEmail.jsx'
+import VerifyEmail from './pages/VerifyEmail.jsx'
+import UserProfilePage from './pages/UserProfilePage.jsx'
 
 const App = () => {
 
@@ -39,9 +39,10 @@ const App = () => {
         <Route path='/' element={authUser ? (authUser.isVerified ? <Home /> : <Navigate to="/verify-email" />) : <Navigate to="/login" />} />
         <Route path='/signup' element={!authUser ? <Signup /> : <Navigate to="/" />} />
         <Route path='/login' element={!authUser ? <Login /> : <Navigate to="/" />} />
-        <Route path='/verify-email' element={<VerifyEmail />} />
+        <Route path='/verify-email' element={authUser?.isVerified ? <Navigate to="/" /> : <VerifyEmail />} />
         <Route path='/settings' element={<Settings />} />
         <Route path='/profile'  element={authUser ? (authUser.isVerified ? <Profile /> : <Navigate to="/verify-email" />) : <Navigate to="/login" />} />
+        <Route path='/profile/:userId' element={<UserProfilePage />} />
       </Routes>
       {/* <Footer /> */}
       <Toaster />

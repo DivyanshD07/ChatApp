@@ -2,6 +2,8 @@ import React from 'react'
 import { useAuthStore } from '../store/useAuthStore'
 import { Link } from 'react-router-dom';
 import { LogOut, MessageSquare, Settings, User } from 'lucide-react';
+import SearchBar from './SearchBar';
+import FriendRequests from './FriendRequests';
 
 const Navbar = () => {
   const { logout, authUser } = useAuthStore();
@@ -17,6 +19,9 @@ const Navbar = () => {
               <h1 className='text-lg font-bold'>Chat</h1>
             </Link>
           </div>
+
+          <SearchBar />
+          <FriendRequests />
 
           <div className='flex items-center gap-2'>
             <Link
