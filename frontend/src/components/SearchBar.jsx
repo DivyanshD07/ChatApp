@@ -33,7 +33,7 @@ const SearchBar = () => {
   };
 
   return (
-    <div className="relative w-64">
+    <div className="relative w-auto">
       {/* Search Input */}
       <div className="flex items-center border border-base-300 rounded-lg px-3 py-2 bg-base-100 shadow-md focus-within:ring-2 focus-within:ring-primary transition-all">
         <Search className="w-5 h-5 text-gray-500" />
